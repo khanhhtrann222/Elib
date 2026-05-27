@@ -44,16 +44,7 @@ export default function useGitHubClient() {
     return saved ? JSON.parse(saved) : { owner: '', repo: '', token: '', branch: 'main' };
   });
 
-  const [isGitHubConnected, setIsGitHubConnected] = useState(false);
-
-  // Validate connection
-  useEffect(() => {
-    if (config.owner && config.repo && config.token) {
-      setIsGitHubConnected(true);
-    } else {
-      setIsGitHubConnected(false);
-    }
-  }, [config]);
+  const isGitHubConnected = !!(config.owner && config.repo && config.token);
 
   const saveConfig = useCallback((newConfig) => {
     localStorage.setItem('elib_github_config', JSON.stringify(newConfig));
@@ -181,7 +172,7 @@ export default function useGitHubClient() {
     const bookId = bookData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     
     let coverUrl = bookData.coverUrl || 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&q=80';
-    let pdfUrl = '';
+
 
     let pdfBase64 = '';
     let coverBase64 = '';
@@ -219,8 +210,8 @@ export default function useGitHubClient() {
       let currentIndex = [];
       try {
         currentIndex = await getBooksIndex();
-      } catch (e) {
-        console.log('Index file not created yet, starting fresh.');
+      } catch (err) {
+        console.log('Index file not created yet, starting fresh.', err);
       }
       
       const newIndex = [...currentIndex.filter(b => b.id !== bookId), {
@@ -294,8 +285,8 @@ async function commitToGitHub(path, base64Content, commitMessage, config) {
       const checkData = await checkResponse.json();
       sha = checkData.sha;
     }
-  } catch (e) {
-    console.log('File does not exist or fetch error, creating new: ', path);
+  } catch (err) {
+    console.log('File does not exist or fetch error, creating new: ', path, err);
   }
 
   const commitUrl = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}`;

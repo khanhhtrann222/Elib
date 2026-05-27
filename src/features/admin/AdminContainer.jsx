@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import useGitHubClient from '../../hooks/useGitHubClient';
 import useGeminiMetadata from './hooks/useGeminiMetadata';
 import UploadDropzone from './components/UploadDropzone';
@@ -10,7 +10,7 @@ import './AdminContainer.css';
 
 export default function AdminContainer({ onNavigateToCatalog }) {
   const { config, saveConfig, isGitHubConnected, commitBook } = useGitHubClient();
-  const { generateMetadata, loading: isGeminiLoading, error: geminiError } = useGeminiMetadata();
+  const { generateMetadata, loading: isGeminiLoading } = useGeminiMetadata();
 
   // Tabs: 'upload' | 'settings'
   const [activeTab, setActiveTab] = useState('upload');

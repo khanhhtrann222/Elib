@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html class="light" lang="vi">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -8,8 +8,126 @@
     <meta name="keywords" content="digital library, pdf reader, virtualized pdf, gemini ai, metadata generator, material design 3, web app" />
     <meta name="author" content="Antigravity Team" />
     <title>Bibliotheca | High-Performance Cinematic PDF Library</title>
+    
+    <!-- Tailwind CSS and custom plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Google Fonts & Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#faf9fc",
+                    "on-primary-fixed-variant": "#543589",
+                    "surface-container": "#efedf1",
+                    "on-tertiary-fixed-variant": "#004b74",
+                    "outline": "#7b7582",
+                    "on-background": "#1b1b1e",
+                    "tertiary-fixed": "#cde5ff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-primary-container": "#fffbff",
+                    "on-primary-fixed": "#270058",
+                    "on-tertiary-fixed": "#001d32",
+                    "on-tertiary-container": "#fdfcff",
+                    "inverse-surface": "#303033",
+                    "primary-fixed-dim": "#d4bbff",
+                    "surface-container-high": "#e9e7eb",
+                    "surface-container-low": "#f5f3f7",
+                    "surface-variant": "#e3e2e6",
+                    "on-error-container": "#93000a",
+                    "error": "#ba1a1a",
+                    "surface": "#faf9fc",
+                    "surface-tint": "#6d4ea2",
+                    "on-secondary-fixed-variant": "#07521d",
+                    "tertiary-container": "#147ab8",
+                    "on-primary": "#ffffff",
+                    "on-surface-variant": "#4a4550",
+                    "inverse-on-surface": "#f2f0f4",
+                    "on-secondary-fixed": "#002107",
+                    "secondary-container": "#abf4ac",
+                    "inverse-primary": "#d4bbff",
+                    "surface-container-highest": "#e3e2e6",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface": "#1b1b1e",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed": "#abf4ac",
+                    "surface-dim": "#dbd9dd",
+                    "outline-variant": "#ccc3d2",
+                    "primary-container": "#8464bb",
+                    "on-secondary-container": "#2e7238",
+                    "primary": "#6a4ba0",
+                    "secondary-fixed-dim": "#90d792",
+                    "tertiary-fixed-dim": "#94ccff",
+                    "primary-fixed": "#ebdcff",
+                    "secondary": "#286b33",
+                    "tertiary": "#006195",
+                    "background": "#faf9fc"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "nav-rail-width": "80px",
+                    "gutter": "24px",
+                    "xs": "4px",
+                    "margin-mobile": "16px",
+                    "sm": "8px",
+                    "xl": "32px",
+                    "base": "4px",
+                    "lg": "24px",
+                    "md": "16px",
+                    "margin-desktop": "32px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "title-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "title-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400"}],
+                    "title-lg": ["22px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "display-lg": ["57px", {"lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+                    "title-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      body { font-family: 'Inter', sans-serif; }
+      .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .nav-active .material-symbols-outlined {
+          font-variation-settings: 'FILL' 1;
+      }
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #ccc3d2; border-radius: 10px; }
+    </style>
   </head>
-  <body>
+  <body class="bg-surface-bright text-on-surface">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

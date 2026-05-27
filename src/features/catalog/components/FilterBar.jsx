@@ -1,4 +1,3 @@
-import React from 'react';
 import TextField from '../../../components/TextField';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import './FilterBar.css';
