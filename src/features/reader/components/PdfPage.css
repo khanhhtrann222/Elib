@@ -1,0 +1,59 @@
+.pdf-page-container {
+  position: relative;
+  background-color: #ffffff; /* Page is always white for reading readability */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  border-radius: var(--md-shape-corner-small);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pdf-page-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pdf-page-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: var(--md-sys-color-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--md-shape-corner-small);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.pdf-page-number-hint {
+  font-family: var(--font-family-display);
+  font-size: 0.9rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.pdf-page-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(22, 22, 26, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.pdf-page-spinner {
+  animation: spin 1s linear infinite;
+  color: var(--md-sys-color-primary);
+}

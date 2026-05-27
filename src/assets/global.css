@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Material Design 3 / Dynamic Calm Theme Palette */
+  --md-sys-color-primary: #C58E62;          /* Calm Copper */
+  --md-sys-color-primary-hover: #D59F73;
+  --md-sys-color-primary-container: #835F42; /* Desert Bronze */
+  --md-sys-color-on-primary: #1A1A1E;        /* Dark Obsidian for contrast */
+  --md-sys-color-on-primary-container: #F6F6F6;
+  
+  --md-sys-color-secondary: #835F42;        /* Desert Bronze */
+  --md-sys-color-secondary-container: #33271E;
+  --md-sys-color-on-secondary: #F6F6F6;
+  --md-sys-color-on-secondary-container: #C58E62;
+
+  --md-sys-color-tertiary: #D3A056;         /* Amber Ochre */
+  --md-sys-color-tertiary-container: #4D3716;
+  --md-sys-color-on-tertiary: #1A1A1E;
+  
+  --md-sys-color-background: #0E0E11;       /* Deep Obsidian Night */
+  --md-sys-color-on-background: #EBEBED;    /* Pure Ivory Text */
+  
+  --md-sys-color-surface: #16161A;          /* Slate Dark Gray Console */
+  --md-sys-color-on-surface: #D9D9DE;       /* Soft Gray Ivory */
+  --md-sys-color-surface-variant: #222228;  /* Muted Obsidian Gray */
+  --md-sys-color-on-surface-variant: #A4A4AF; /* Subtext */
+  
+  --md-sys-color-outline: #383842;          /* Clean thin boundary lines */
+  --md-sys-color-outline-variant: #2A2A33;
+  --md-sys-color-error: #E06C75;            /* Soft Muted Red */
+  
+  /* Glassmorphism & Cinematic Elements */
+  --glass-bg: rgba(22, 22, 26, 0.75);
+  --glass-border: rgba(56, 56, 66, 0.4);
+  --glass-shadow: rgba(0, 0, 0, 0.4);
+  --glass-blur: blur(16px) saturate(180%);
+  
+  /* MD3 Corner Radius Tokens */
+  --md-shape-corner-none: 0px;
+  --md-shape-corner-extra-small: 4px;
+  --md-shape-corner-small: 8px;
+  --md-shape-corner-medium: 12px;
+  --md-shape-corner-large: 16px;
+  --md-shape-corner-extra-large: 24px;
+  --md-shape-corner-full: 9999px;
+
+  /* Fonts */
+  --font-family-display: 'Outfit', 'Inter', sans-serif;
+  --font-family-body: 'Inter', sans-serif;
+
+  /* Transitions */
+  --transition-standard: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-fast: all 0.15s cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Base Document Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+  font-family: var(--font-family-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-display);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--md-sys-color-on-background);
+}
+
+a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+a:hover {
+  color: var(--md-sys-color-primary-hover);
+}
+
+/* Custom Scrollbar Styles for Cinematic Dark Console */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--md-sys-color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--md-sys-color-surface-variant);
+  border-radius: var(--md-shape-corner-full);
+  border: 2px solid var(--md-sys-color-background);
+  transition: var(--transition-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--md-sys-color-primary);
+}
+
+/* Premium Layout Components */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 var(--glass-shadow);
+}
+
+/* Utility Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.15; filter: blur(40px); }
+  50% { opacity: 0.35; filter: blur(60px); }
+}
+
+.ambient-glow {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: var(--md-shape-corner-full);
+  background: radial-gradient(circle, var(--md-sys-color-primary) 0%, transparent 70%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: pulseGlow 8s ease-in-out infinite;
+  z-index: 0;
+}

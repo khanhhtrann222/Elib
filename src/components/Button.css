@@ -1,0 +1,107 @@
+.md3-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family-display);
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  height: 40px;
+  padding: 0 24px;
+  border-radius: var(--md-shape-corner-full);
+  border: none;
+  cursor: pointer;
+  outline: none;
+  transition: var(--transition-standard);
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  gap: 8px;
+}
+
+.md3-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* 1. Filled Button (Calm Copper) */
+.md3-btn--filled {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.md3-btn--filled:hover:not(:disabled) {
+  background-color: var(--md-sys-color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(197, 142, 98, 0.25);
+}
+
+.md3-btn--filled:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+/* 2. Tonal Button (Desert Bronze Muted) */
+.md3-btn--tonal {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border: 1px solid rgba(197, 142, 98, 0.15);
+}
+
+.md3-btn--tonal:hover:not(:disabled) {
+  background-color: rgba(197, 142, 98, 0.15);
+  color: var(--md-sys-color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.md3-btn--tonal:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+/* 3. Outlined Button (Thin borders) */
+.md3-btn--outlined {
+  background-color: transparent;
+  color: var(--md-sys-color-on-surface);
+  border: 1px solid var(--md-sys-color-outline);
+}
+
+.md3-btn--outlined:hover:not(:disabled) {
+  background-color: rgba(217, 217, 222, 0.05);
+  border-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-primary);
+  transform: translateY(-1px);
+}
+
+.md3-btn--outlined:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+/* 4. Text Button */
+.md3-btn--text {
+  background-color: transparent;
+  color: var(--md-sys-color-primary);
+  padding: 0 16px;
+}
+
+.md3-btn--text:hover:not(:disabled) {
+  background-color: rgba(197, 142, 98, 0.08);
+  color: var(--md-sys-color-primary-hover);
+}
+
+.md3-btn--text:active:not(:disabled) {
+  background-color: rgba(197, 142, 98, 0.15);
+}
+
+/* Icon placement */
+.md3-btn__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+}
+
+.md3-btn--with-icon {
+  padding-left: 18px;
+}

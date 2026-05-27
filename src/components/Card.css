@@ -1,0 +1,61 @@
+.md3-card {
+  border-radius: var(--md-shape-corner-large);
+  padding: 16px;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  border: 1px solid transparent;
+  transition: var(--transition-standard);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 1. Outlined Card (Thin borders, flat default) */
+.md3-card--outlined {
+  background-color: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.md3-card--outlined.md3-card--hoverable:hover {
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 4px 20px rgba(197, 142, 98, 0.08);
+  transform: translateY(-4px);
+}
+
+/* 2. Elevated Card */
+.md3-card--elevated {
+  background-color: var(--md-sys-color-surface-variant);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.02);
+}
+
+.md3-card--elevated.md3-card--hoverable:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  transform: translateY(-4px);
+  border-color: rgba(197, 142, 98, 0.15);
+}
+
+/* 3. Filled Card */
+.md3-card--filled {
+  background-color: var(--md-sys-color-secondary-container);
+  border: 1px solid rgba(197, 142, 98, 0.1);
+}
+
+.md3-card--filled.md3-card--hoverable:hover {
+  background-color: rgba(131, 95, 66, 0.25);
+  transform: translateY(-4px);
+}
+
+/* 4. Glassmorphic Card (Cinematic overlays) */
+.md3-card--glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 var(--glass-shadow);
+}
+
+.md3-card--glass.md3-card--hoverable:hover {
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+  transform: translateY(-4px);
+}

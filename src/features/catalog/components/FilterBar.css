@@ -1,0 +1,101 @@
+.filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+  width: 100%;
+}
+
+.filter-bar__search-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.filter-bar__search {
+  flex: 1;
+  min-width: 280px;
+}
+
+.filter-bar__sort-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 56px;
+  border-radius: var(--md-shape-corner-small);
+  border: 1px solid var(--md-sys-color-outline);
+  background-color: var(--md-sys-color-surface);
+  padding: 0 16px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.filter-bar__sort-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-family-display);
+  font-size: 0.85rem;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.filter-bar__sort-select {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-family-body);
+  font-size: 0.9rem;
+  color: var(--md-sys-color-on-background);
+  cursor: pointer;
+  padding-right: 8px;
+}
+
+.filter-bar__sort-select option {
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+}
+
+/* Category Filter Chips (MD3 Chips Style) */
+.filter-bar__chips-container {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none; /* Hide scrollbar for clean carousel look */
+}
+
+.filter-bar__chips-container::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-chip {
+  flex-shrink: 0;
+  height: 32px;
+  padding: 0 16px;
+  border-radius: var(--md-shape-corner-small);
+  border: 1px solid var(--md-sys-color-outline);
+  background-color: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  font-family: var(--font-family-display);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-chip:hover {
+  background-color: rgba(217, 217, 222, 0.05);
+  color: var(--md-sys-color-on-surface);
+  border-color: var(--md-sys-color-on-surface);
+}
+
+.filter-chip--active {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 2px 8px rgba(197, 142, 98, 0.1);
+}
