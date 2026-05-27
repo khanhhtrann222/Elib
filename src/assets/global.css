@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
+  color-scheme: dark;
   /* Material Design 3 / Dynamic Calm Theme Palette */
   --md-sys-color-primary: #C58E62;          /* Calm Copper */
   --md-sys-color-primary-hover: #D59F73;
@@ -58,6 +59,11 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html {
+  color-scheme: dark;
+  background-color: var(--md-sys-color-background);
 }
 
 body {

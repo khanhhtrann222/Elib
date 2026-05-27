@@ -102,12 +102,13 @@
   height: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--md-sys-color-background);
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #ccc3d2;
+  background: var(--md-sys-color-surface-variant);
   border-radius: 10px;
+  border: 2px solid var(--md-sys-color-background);
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #7b7582;
+  background: var(--md-sys-color-primary);
 }

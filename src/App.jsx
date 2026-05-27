@@ -234,7 +234,7 @@ export default function App() {
                     value={loginUsername} 
                     onChange={(e) => setLoginUsername(e.target.value)} 
                     className="w-full h-12 px-4 rounded-lg bg-surface-variant border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-body-md text-body-md" 
-                    placeholder="Nhập tên đăng nhập (root)" 
+                    placeholder="Nhập tên đăng nhập" 
                     required 
                   />
                 </div>
@@ -245,7 +245,7 @@ export default function App() {
                     value={loginPassword} 
                     onChange={(e) => setLoginPassword(e.target.value)} 
                     className="w-full h-12 px-4 rounded-lg bg-surface-variant border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-body-md text-body-md" 
-                    placeholder="Nhập mật khẩu (admin123)" 
+                    placeholder="Nhập mật khẩu" 
                     required 
                   />
                 </div>
