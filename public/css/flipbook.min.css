@@ -1,0 +1,100 @@
+.flipbook-root {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background: radial-gradient(circle at top left, rgba(255,255,255,0.08), transparent 30%),
+              linear-gradient(180deg, #111117 0%, #07070c 55%, #0b0b12 100%);
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+.flipbook-toolbar {
+  position: relative;
+  z-index: 5;
+  min-height: 56px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: rgba(10, 10, 16, 0.88);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.flipbook-toolbar__title {
+  color: #f4f4fb;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.flipbook-toolbar__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.84rem;
+}
+
+.flipbook-iframe {
+  width: 100%;
+  height: calc(100% - 56px);
+  border: none;
+  border-radius: 0 0 1.15rem 1.15rem;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+.flipbook-viewer {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  min-height: 0;
+}
+
+.flipbook-page {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  border-radius: 1rem;
+  object-fit: contain;
+}
+
+.flipbook-toolbar button,
+.flipbook-toolbar a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.6rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fafafa;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.flipbook-toolbar button:hover,
+.flipbook-toolbar a:hover {
+  background: rgba(255, 255, 255, 0.14);
+  transform: translateY(-1px);
+}
+
+.flipbook-empty-state {
+  width: 100%;
+  height: calc(100% - 56px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.65);
+  font-size: 0.95rem;
+  padding: 1rem;
+  text-align: center;
+}

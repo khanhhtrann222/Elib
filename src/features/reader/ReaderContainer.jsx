@@ -87,6 +87,8 @@ export default function ReaderContainer({ bookId, onCloseReader }) {
 
   const [bookMetadata, setBookMetadata] = useState(null);
   const [pdfDoc, setPdfDoc] = useState(null);
+  const [pdfUrl, setPdfUrl] = useState('');
+  const [flipbookReady, setFlipbookReady] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   // currentPage = the LEFT page in the spread (right = currentPage + 1)
   // Page 1 is cover → shown alone on right side
@@ -107,6 +109,7 @@ export default function ReaderContainer({ bookId, onCloseReader }) {
   });
   const [isFlipping, setIsFlipping] = useState(false);
   const [flipDirection, setFlipDirection] = useState(null); // 'next' | 'prev'
+  const flipbookRef = useRef(null);
 
   // Derive left & right page numbers from currentPage
   // Page 1 = cover → left empty, right = page 1
@@ -127,6 +130,8 @@ export default function ReaderContainer({ bookId, onCloseReader }) {
         ]);
         if (!active) return;
         setBookMetadata(metadata);
+        setPdfUrl(url);
+        setFlipbookReady(false);
 
         const loadingTask = pdfjs.getDocument({ url, withCredentials: false });
         const doc = await loadingTask.promise;
@@ -156,6 +161,20 @@ export default function ReaderContainer({ bookId, onCloseReader }) {
     return () => { active = false; };
   }, [bookId, getBookPdfUrl, getBookMetadata]);
 
+
+  // Initialize the jQuery FlipBook plugin if it is available
+  useEffect(() => {
+    if (!pdfUrl || !bookMetadata || !flipbookRef.current) return;
+    if (window.jQuery && window.jQuery.fn && window.jQuery.fn.flipBook) {
+      window.jQuery(flipbookRef.current).flipBook({
+        pdf: pdfUrl,
+        responsive: true,
+        toolbar: true,
+        autoPlay: false
+      });
+      setFlipbookReady(true);
+    }
+  }, [pdfUrl, bookMetadata]);
 
   // 3. Save progress whenever currentPage changes
   useEffect(() => {
@@ -314,67 +333,71 @@ export default function ReaderContainer({ bookId, onCloseReader }) {
 
       {/* Main Book Canvas */}
       <div className="reader-canvas">
-        <div className="book-flipper">
-          {/* Prev Arrow */}
-          <button
-            className="book-nav-arrow"
-            onClick={goPrev}
-            disabled={!canGoPrev}
-            title="Trang trước"
-          >
-            <ChevronLeft size={22} />
-          </button>
-
-          {/* Book Spread */}
-          <div className="book-perspective-wrapper">
-            {/* LEFT PAGE */}
-            <div className={`book-page book-page--left ${flipDirection === 'prev' ? 'book-page--flip-prev' : ''} ${!leftPageNum ? 'book-page--empty' : ''}`}>
-              {leftPageNum ? (
-                <>
-                  <div className="page-spine" />
-                  <FlipbookPage pdfDoc={pdfDoc} pageNumber={leftPageNum} isVisible={true} />
-                  <span className="page-number-label">{leftPageNum}</span>
-                </>
-              ) : (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-                  <span className="material-symbols-outlined" style={{ fontSize: '4rem', color: 'rgba(212,187,255,0.15)', fontVariationSettings: "'FILL' 1" }}>auto_stories</span>
-                </div>
-              )}
-            </div>
-
-            {/* GUTTER */}
-            <div className="book-gutter" />
-
-            {/* RIGHT PAGE */}
-            <div
-              className={`book-page book-page--right ${flipDirection === 'next' ? 'book-page--flip-next' : ''}`}
-              onClick={canGoNext ? goNext : undefined}
+        {flipbookReady ? (
+          <div ref={flipbookRef} className="reader-flipbook-container" />
+        ) : (
+          <div className="book-flipper">
+            {/* Prev Arrow */}
+            <button
+              className="book-nav-arrow"
+              onClick={goPrev}
+              disabled={!canGoPrev}
+              title="Trang trước"
             >
-              {rightPageNum ? (
-                <>
-                  <div className="page-spine" />
-                  <FlipbookPage pdfDoc={pdfDoc} pageNumber={rightPageNum} isVisible={true} />
-                  <div className="page-curl-corner" />
-                  <span className="page-number-label">{rightPageNum}</span>
-                </>
-              ) : (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-                  <span style={{ color: 'rgba(26,26,26,0.3)', fontSize: '0.85rem', fontFamily: 'Inter, sans-serif' }}>Kết thúc</span>
-                </div>
-              )}
-            </div>
-          </div>
+              <ChevronLeft size={22} />
+            </button>
 
-          {/* Next Arrow */}
-          <button
-            className="book-nav-arrow"
-            onClick={goNext}
-            disabled={!canGoNext}
-            title="Trang sau"
-          >
-            <ChevronRight size={22} />
-          </button>
-        </div>
+            {/* Book Spread */}
+            <div className="book-perspective-wrapper">
+              {/* LEFT PAGE */}
+              <div className={`book-page book-page--left ${flipDirection === 'prev' ? 'book-page--flip-prev' : ''} ${!leftPageNum ? 'book-page--empty' : ''}`}>
+                {leftPageNum ? (
+                  <>
+                    <div className="page-spine" />
+                    <FlipbookPage pdfDoc={pdfDoc} pageNumber={leftPageNum} isVisible={true} />
+                    <span className="page-number-label">{leftPageNum}</span>
+                  </>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: '4rem', color: 'rgba(212,187,255,0.15)', fontVariationSettings: "'FILL' 1" }}>auto_stories</span>
+                  </div>
+                )}
+              </div>
+
+              {/* GUTTER */}
+              <div className="book-gutter" />
+
+              {/* RIGHT PAGE */}
+              <div
+                className={`book-page book-page--right ${flipDirection === 'next' ? 'book-page--flip-next' : ''}`}
+                onClick={canGoNext ? goNext : undefined}
+              >
+                {rightPageNum ? (
+                  <>
+                    <div className="page-spine" />
+                    <FlipbookPage pdfDoc={pdfDoc} pageNumber={rightPageNum} isVisible={true} />
+                    <div className="page-curl-corner" />
+                    <span className="page-number-label">{rightPageNum}</span>
+                  </>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+                    <span style={{ color: 'rgba(26,26,26,0.3)', fontSize: '0.85rem', fontFamily: 'Inter, sans-serif' }}>Kết thúc</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Next Arrow */}
+            <button
+              className="book-nav-arrow"
+              onClick={goNext}
+              disabled={!canGoNext}
+              title="Trang sau"
+            >
+              <ChevronRight size={22} />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Bottom Control Bar */}

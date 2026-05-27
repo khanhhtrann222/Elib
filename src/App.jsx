@@ -1,5 +1,6 @@
 import React, { useState, Suspense, lazy } from 'react';
 import { Loader2 } from 'lucide-react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
 import './App.css';
 
 // Lazy load feature containers to trigger Rollup bundle splitting config.
@@ -17,36 +18,42 @@ function LoaderFallback() {
 }
 
 export default function App() {
-  const [route, setRoute] = useState('catalog'); // 'catalog' | 'favorites' | 'admin' | 'reader'
+  const navigate = useNavigate();
+  const location = useLocation();
   const [adminTab, setAdminTab] = useState('upload'); // 'upload' | 'settings'
-  const [activeBookId, setActiveBookId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   // Authentication state
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [pendingRoute, setPendingRoute] = useState(null); // { route, tab }
+  const [pendingPath, setPendingPath] = useState(null);
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState('');
 
+  const route = location.pathname.startsWith('/favorites')
+    ? 'favorites'
+    : location.pathname.startsWith('/admin')
+      ? 'admin'
+      : location.pathname.startsWith('/read/')
+        ? 'reader'
+        : 'catalog';
+
   const handleSelectBook = (bookId) => {
-    setActiveBookId(bookId);
-    setRoute('reader');
+    navigate(`/read/${bookId}`);
   };
 
   const handleCloseReader = () => {
-    setActiveBookId(null);
-    setRoute('catalog');
+    navigate('/');
   };
 
   // Intercept and authenticate admin access
   const handleAdminNavigation = (tab = 'upload') => {
+    setAdminTab(tab);
     if (isAdminLoggedIn) {
-      setRoute('admin');
-      setAdminTab(tab);
+      navigate('/admin');
     } else {
-      setPendingRoute({ route: 'admin', tab });
+      setPendingPath('/admin');
       setShowLoginModal(true);
     }
   };
@@ -60,11 +67,11 @@ export default function App() {
       setLoginUsername('');
       setLoginPassword('');
       
-      // Proceed to the intercepted route
-      if (pendingRoute) {
-        setRoute(pendingRoute.route);
-        setAdminTab(pendingRoute.tab);
-        setPendingRoute(null);
+      if (pendingPath) {
+        navigate(pendingPath);
+        setPendingPath(null);
+      } else {
+        navigate('/admin');
       }
     } else {
       setLoginError('Tài khoản hoặc mật khẩu không chính xác.');
@@ -74,9 +81,14 @@ export default function App() {
   const handleLogout = () => {
     setIsAdminLoggedIn(false);
     if (route === 'admin') {
-      setRoute('catalog');
+      navigate('/');
     }
   };
+
+  function ReaderRoute({ onCloseReader }) {
+    const { bookId } = useParams();
+    return <ReaderContainer bookId={bookId} onCloseReader={onCloseReader} />;
+  }
 
   const renderMainContent = () => {
     return (
@@ -89,7 +101,7 @@ export default function App() {
           <nav className="flex flex-col gap-md flex-grow w-full px-2">
             {/* Trang chủ */}
             <button 
-              onClick={() => setRoute('catalog')}
+              onClick={() => navigate('/')}
               className={`flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 w-full hover:bg-surface-container-high ${route === 'catalog' ? 'bg-primary-fixed text-on-primary-fixed nav-active font-semibold shadow-sm' : 'text-on-surface-variant'}`}
             >
               <span className="material-symbols-outlined" style={{ fontVariationSettings: route === 'catalog' ? "'FILL' 1" : "'FILL' 0" }}>home</span>
@@ -97,7 +109,7 @@ export default function App() {
             </button>
             {/* Thư viện */}
             <button 
-              onClick={() => setRoute('catalog')}
+              onClick={() => navigate('/')}
               className={`flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 w-full hover:bg-surface-container-high ${route === 'catalog' ? 'text-primary font-semibold' : 'text-on-surface-variant'}`}
             >
               <span className="material-symbols-outlined" style={{ fontVariationSettings: route === 'catalog' ? "'FILL' 1" : "'FILL' 0" }}>library_books</span>
@@ -105,7 +117,7 @@ export default function App() {
             </button>
             {/* Yêu thích */}
             <button 
-              onClick={() => setRoute('favorites')}
+              onClick={() => navigate('/favorites')}
               className={`flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 w-full hover:bg-surface-container-high ${route === 'favorites' ? 'bg-primary-fixed text-on-primary-fixed nav-active font-semibold shadow-sm' : 'text-on-surface-variant'}`}
             >
               <span className="material-symbols-outlined" style={{ fontVariationSettings: route === 'favorites' ? "'FILL' 1" : "'FILL' 0" }}>bookmark</span>
@@ -186,21 +198,34 @@ export default function App() {
         {/* Main Content Layout */}
         <main className="ml-nav-rail-width mt-16 p-margin-desktop h-[calc(100vh-64px)] overflow-hidden">
           <Suspense fallback={<LoaderFallback />}>
-            {(route === 'catalog' || route === 'favorites') && (
-              <CatalogContainer 
-                onSelectBook={handleSelectBook}
-                onNavigateToAdmin={() => handleAdminNavigation('upload')}
-                searchQuery={searchQuery}
-                onlyFavorites={route === 'favorites'}
-              />
-            )}
-            
-            {route === 'admin' && (
-              <AdminContainer 
-                onNavigateToCatalog={() => setRoute('catalog')}
-                initialTab={adminTab}
-              />
-            )}
+            <Routes>
+              <Route path="/" element={
+                <CatalogContainer 
+                  onSelectBook={handleSelectBook}
+                  onNavigateToAdmin={() => handleAdminNavigation('upload')}
+                  searchQuery={searchQuery}
+                  onlyFavorites={false}
+                />
+              } />
+              <Route path="/favorites" element={
+                <CatalogContainer 
+                  onSelectBook={handleSelectBook}
+                  onNavigateToAdmin={() => handleAdminNavigation('upload')}
+                  searchQuery={searchQuery}
+                  onlyFavorites={true}
+                />
+              } />
+              <Route path="/admin" element={
+                <AdminContainer 
+                  onNavigateToCatalog={() => navigate('/')}
+                  initialTab={adminTab}
+                />
+              } />
+              <Route path="/read/:bookId" element={
+                <ReaderRoute onCloseReader={handleCloseReader} />
+              } />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
           </Suspense>
         </main>
 
@@ -281,14 +306,7 @@ export default function App() {
   return (
     <div className="app-root">
       <Suspense fallback={<LoaderFallback />}>
-        {route === 'reader' && activeBookId ? (
-          <ReaderContainer 
-            bookId={activeBookId}
-            onCloseReader={handleCloseReader}
-          />
-        ) : (
-          renderMainContent()
-        )}
+        {renderMainContent()}
       </Suspense>
     </div>
   );

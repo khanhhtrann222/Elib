@@ -78,7 +78,14 @@ export default function useGitHubClient() {
         return JSON.parse(localStorage.getItem('elib_mock_books') || '[]');
       }
     } else {
-      // Mock delayed response
+      try {
+        const response = await fetch('/metadata/index.json');
+        if (response.ok) {
+          return await response.json();
+        }
+      } catch (err) {
+        // continue to fallback
+      }
       await new Promise(resolve => setTimeout(resolve, 300));
       return JSON.parse(localStorage.getItem('elib_mock_books') || '[]');
     }
@@ -104,11 +111,20 @@ export default function useGitHubClient() {
       }
     }
     
-    // Local fallback
-    const localBooks = JSON.parse(localStorage.getItem('elib_mock_books') || '[]');
-    const book = localBooks.find(b => b.id === id);
-    if (!book) throw new Error('Book metadata not found');
-    return book;
+    if (!isGitHubConnected) {
+      try {
+        const response = await fetch(`/metadata/${id}.json`);
+        if (response.ok) {
+          return await response.json();
+        }
+      } catch (err) {
+        // continue to fallback
+      }
+      const localBooks = JSON.parse(localStorage.getItem('elib_mock_books') || '[]');
+      const book = localBooks.find(b => b.id === id);
+      if (!book) throw new Error('Book metadata not found');
+      return book;
+    }
   }, [config, isGitHubConnected]);
 
   // 3. Get Book PDF URL / Stream
@@ -140,18 +156,6 @@ export default function useGitHubClient() {
       return book.pdfUrl;
     }
     
-    // Check if we have committed a base64 version locally
-    const base64Pdf = localStorage.getItem(`elib_pdf_${id}`);
-    if (base64Pdf) {
-      const bin = atob(base64Pdf);
-      const arr = new Uint8Array(bin.length);
-      for (let i = 0; i < bin.length; i++) {
-        arr[i] = bin.charCodeAt(i);
-      }
-      const blob = new Blob([arr], { type: 'application/pdf' });
-      return URL.createObjectURL(blob);
-    }
-    
     // Default fallback to a working public PDF
     return 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
   }, [config, isGitHubConnected]);
@@ -176,9 +180,16 @@ export default function useGitHubClient() {
 
     let pdfBase64 = '';
     let coverBase64 = '';
+    let localPdfFile = null;
+
+    const coverExtension = coverFile ? (coverFile.type.split('/')[1] || 'png') : 'png';
 
     if (pdfFile) {
-      pdfBase64 = await fileToBase64(pdfFile);
+      if (isGitHubConnected) {
+        pdfBase64 = await fileToBase64(pdfFile);
+      } else {
+        pdfBase64 = await fileToBase64(pdfFile);
+      }
     }
     if (coverFile) {
       coverBase64 = await fileToBase64(coverFile);
@@ -187,8 +198,8 @@ export default function useGitHubClient() {
     const bookMetadata = {
       ...bookData,
       id: bookId,
-      coverUrl: coverFile ? `https://raw.githubusercontent.com/${config.owner}/${config.repo}/${config.branch}/covers/${bookId}.png` : coverUrl,
-      pdfUrl: pdfFile ? `https://raw.githubusercontent.com/${config.owner}/${config.repo}/${config.branch}/books/${bookId}.pdf` : ''
+      coverUrl: coverFile ? `/covers/${bookId}.${coverExtension}` : coverUrl,
+      pdfUrl: pdfFile ? `/books/${bookId}.pdf` : bookData.pdfUrl
     };
 
     if (isGitHubConnected) {
@@ -228,31 +239,48 @@ export default function useGitHubClient() {
       const indexBase64 = btoa(JSON.stringify(newIndex, null, 2));
       await commitToGitHub('metadata/index.json', indexBase64, `Update index.json for ${bookData.title}`, config);
     } else {
-      // Save locally
-      if (pdfBase64) {
-        localStorage.setItem(`elib_pdf_${bookId}`, pdfBase64);
-      }
+      // Save locally in the project during dev.
       if (coverFile && coverBase64) {
-        // Create local object URL / base64 image data URL
-        const reader = new FileReader();
-        reader.readAsDataURL(coverFile);
-        await new Promise((resolve) => {
-          reader.onload = () => {
-            coverUrl = reader.result;
-            resolve();
-          };
-        });
+        coverUrl = `/covers/${bookId}.${coverExtension}`;
       }
 
       const finalLocalMetadata = {
         ...bookMetadata,
         coverUrl,
-        pdfUrl: pdfFile ? '' : bookData.pdfUrl
+        pdfUrl: pdfFile ? `/books/${bookId}.pdf` : bookData.pdfUrl
       };
 
       const localBooks = JSON.parse(localStorage.getItem('elib_mock_books') || '[]');
       const updatedBooks = [...localBooks.filter(b => b.id !== bookId), finalLocalMetadata];
       localStorage.setItem('elib_mock_books', JSON.stringify(updatedBooks));
+
+      try {
+        await fetch('/api/save-book', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            bookId,
+            bookMetadata: finalLocalMetadata,
+            index: updatedBooks.map((book) => ({
+              id: book.id,
+              title: book.title,
+              author: book.author,
+              description: book.description,
+              tags: book.tags,
+              categories: book.categories,
+              publicationYear: book.publicationYear,
+              coverUrl: book.coverUrl
+            })),
+            pdfBase64,
+            coverBase64,
+            coverExtension
+          })
+        });
+      } catch (error) {
+        console.warn('Project save failed:', error);
+      }
     }
 
     return bookId;
